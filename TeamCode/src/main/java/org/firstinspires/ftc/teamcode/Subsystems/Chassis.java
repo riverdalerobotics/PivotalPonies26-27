@@ -17,12 +17,24 @@ public class Chassis extends SubsystemBase {
     HardwareMap hardwareMap;
     private static IMU imu;
 
+    private static class InvertedMotor extends MotorEx {
+        public InvertedMotor(HardwareMap hardwareMap, String id, Motor.GoBILDA gobildaType) {
+            super(hardwareMap, id, gobildaType);
+        }
+
+        @Override
+        public void set(double output) {
+            super.set(-output);
+        }
+    }
+
     public Chassis(HardwareMap hardwareMap, Follower follower) {
         this.hardwareMap = hardwareMap;
-        MotorEx frontLeft = new MotorEx(hardwareMap, "frontLeft", Motor.GoBILDA.RPM_312);
+        MotorEx frontLeft = new InvertedMotor(hardwareMap, "frontLeft", Motor.GoBILDA.RPM_312);
         MotorEx frontRight = new MotorEx(hardwareMap, "frontRight", Motor.GoBILDA.RPM_312);
-        MotorEx backLeft = new MotorEx(hardwareMap, "backLeft", Motor.GoBILDA.RPM_312);
+        MotorEx backLeft = new InvertedMotor(hardwareMap, "backLeft", Motor.GoBILDA.RPM_312);
         MotorEx backRight = new MotorEx(hardwareMap, "backRight", Motor.GoBILDA.RPM_312);
+        
         IMU.Parameters myIMUparameters;
 
         myIMUparameters = new IMU.Parameters(
